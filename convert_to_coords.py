@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# vim: set fileencoding=utf-8:
 import sys
 import getopt
 import os
@@ -9,6 +10,14 @@ x_transformation = 0
 step_angle = 1.8
 
 def convert_to_coords(distance):
+#convert to voltage
+	voltage = float(3.6/4095)*float(distance)
+
+	print "voltage is ", voltage
+
+#16.2537 * x4 – 129.893 * x3 + 382.268 * x2 – 512.611 * x + 306.439
+#first we need to convert the Voltage to a distance:
+	
 	x = -math.sin(crrnt_angle*(math.pi/180))*distance
 	y = math.cos(crrnt_angle*(math.pi/180))*distance
 	x += x_transformation

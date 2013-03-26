@@ -1,6 +1,8 @@
 #include "scanner.h"
 #include "tprintf.h"
 
+#include <FreeRTOS.h>
+#include <task.h>
 #define STEPS_PER_REV	200
 
 void do_half_step(int direction);
@@ -8,9 +10,6 @@ void do_full_step(int direction);
 
 void scan_hw_init()
 {
-
-
-
 	ADC_InitTypeDef  ADC_InitStructure;
 	/* PCLK2 is the APB2 clock */
 	/* ADCCLK = PCLK2/6 = 72/6 = 12MHz*/
@@ -61,12 +60,12 @@ void step_motor(int steps)
 {
 	for(int i = 0; i < steps; i++) {
 		do_full_step(1);
+		vTaskDelay(100/portTICK_RATE_MS);
 	}
 }
 
 int get_distance()
 {
-
 	ADC_RegularChannelConfig(ADC1, 1, 1, ADC_SampleTime_1Cycles5);
 	// Start the conversion
 	ADC_SoftwareStartConvCmd(ADC1, ENABLE);
@@ -80,6 +79,7 @@ int get_distance()
 void scan()
 {
 	for(int i = 0; i < STEPS_PER_REV; i++) {
+		vTaskDelay(100/portTICK_RATE_MS);
 		tprintf("%i\n", get_distance());
 		step_motor(1);
 	}

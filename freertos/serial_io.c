@@ -68,6 +68,7 @@ void serial_task(void *pvParameters)	//term-task
 	add_cmd("status", cmd_status);
 	add_cmd("step_motor", cmd_step_motor);
 	add_cmd("get_distance", cmd_get_distance);
+	add_cmd("get_d", cmd_get_distance);
 	add_cmd("scan", cmd_scan);
 
 	char ch;
@@ -128,6 +129,7 @@ void cmd_get_distance(char *args)
 void cmd_scan(char *args)
 {
 	tprintf("#scanning..\n");
+	scan();
 }
 
 //char *args is <cmd_name> <arg1> <arg2> ...
