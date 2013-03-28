@@ -7,19 +7,34 @@ import math
 
 crrnt_angle = 0
 x_transformation = 0
-step_angle = 1.8
+step_angle = 0.83333333333333333333333333333333333333334
 
 def convert_to_coords(distance):
-#convert to voltage
-	voltage = float(3.6/4095)*float(distance)
-
-	print "voltage is ", voltage
-
-#16.2537 * x4 – 129.893 * x3 + 382.268 * x2 – 512.611 * x + 306.439
-#first we need to convert the Voltage to a distance:
 	
+	#convert to voltage
+	voltage = float(3.3/4095)*float(distance)
+
+	#convert the Voltage to a distance:
+	#16.2537 * x4 – 129.893 * x3 + 382.268 * x2 – 512.611 * x + 306.439
+	a = voltage*voltage*voltage*voltage*16.2537
+	b = -voltage*voltage*voltage*129.893
+	c = voltage*voltage*382.268
+	d = -voltage*512.611
+	e = 306.439
+
+	distance = a+b+c+d+e
+
+	distance *= 10 #to mm
+	
+	#add offset from the axis
+	#distance = distance + 70
+	
+	print "dist is ", distance	
+
 	x = -math.sin(crrnt_angle*(math.pi/180))*distance
+	print "x is ", x	
 	y = math.cos(crrnt_angle*(math.pi/180))*distance
+	print "y is ", y	
 	x += x_transformation
 	return (x,y)
 
