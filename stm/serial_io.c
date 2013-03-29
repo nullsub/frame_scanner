@@ -31,6 +31,7 @@ static int get_word(char *buffer, char *source, const int length)
 int add_cmd(char *cmd_name, void (*func) (char *args));
 int parse_cmd(char *cmd);
 void cmd_help(char *args);
+void cmd_start_measure(char *args);
 void cmd_status(char *args);
 void cmd_step_motor(char *args);
 void cmd_scan(char *args);
@@ -70,6 +71,7 @@ void serial_task(void *pvParameters)	//term-task
 	add_cmd("get_distance", cmd_get_distance);
 	add_cmd("get_d", cmd_get_distance);
 	add_cmd("scan", cmd_scan);
+	add_cmd("start_measure", cmd_start_measure);
 
 	char ch;
 
@@ -111,6 +113,11 @@ void cmd_help(char *args)
 	tprintf("step_motor <steps> - step the motor <steps> steps\n");
 	tprintf("get_distance - read the distance from the IR sensor and print it out\n");
 	return;
+}
+
+void cmd_start_measure(char *args)
+{
+	start_measure();
 }
 
 void cmd_status(char *args)

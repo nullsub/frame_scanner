@@ -77,6 +77,13 @@ int get_distance()
 	return adc_val;
 }
 
+void start_measure() //imitades a button press on the laser scanner
+{
+	//on
+	vTaskDelay(400/portTICK_RATE_MS);
+	//of
+}
+
 void scan()
 {
 	for(int i = 0; i < STEPS_PER_REV; i++) {
