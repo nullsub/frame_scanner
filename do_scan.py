@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # vim: set fileencoding=utf-8:
 import sys
-import getopt
 import os
 import serial
 import subprocess
@@ -19,8 +18,11 @@ def main(argv):
 	if ip_addr == '':
 		print sys.argv[0], '.py <ip_addr>'
 		sys.exit(2)
-
-	ser_dev = serial.Serial(port, 9600, timeout=1)
+	try:
+		ser_dev = serial.Serial(port, 9600, timeout=1)
+	except:
+		print "can not open serial port", port
+		sys.exit(2)
 
 	for i in range(0, nr_of_steps):
 		distance = "0.00"
@@ -29,11 +31,11 @@ def main(argv):
 		subprocess.call(["sleep", "1s"])
 
 		#get distance from camera
-		if subprocess.call(["wget", ip_addr + ":8080/photo.jpg", "-O" + os.getcwd() + "/photo.jpg"]) != 0: 
+		if subprocess.call(["wget", ip_addr + ":8080/photo.jpg", "-O scans/"  + os.getcwd() +  + str(i) + ".jpg"]) != 0: 
 			print 'can not connect to ip ', ip_addr
 			sys.exit(2)
 
-		subprocess.call(["jpegtran -rotate 90 photo.jpg >" + str(i) + ".jpg"], shell=True)
+		subprocess.call(["jpegtran -rotate 90 scans/" + str(i) + ".jpg > scans/ " + str(i) + ".jpg"], shell=True)
 
 		#step the motor
 		ser_dev.write("step_motor 1\n")
