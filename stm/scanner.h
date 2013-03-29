@@ -19,7 +19,6 @@
 void scan_hw_init();
 void step_motor(int steps);
 int get_distance();
-void start_measure();
 void scan();
 
 #endif
