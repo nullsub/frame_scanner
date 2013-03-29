@@ -7,18 +7,22 @@ import os
 import math
 
 crrnt_angle = 0
-x_transformation = 0
-step_angle = 0.833333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333334
+axis_offset = 10
+step_angle = 0.83333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
 
 def convert_to_coords(distance):
 	
-	print "dist is ", distance	
+	print "dist is ", distance
+	offset_x = -math.sin(crrnt_angle*(math.pi/180))*axis_offset
+	offset_y = math.cos(crrnt_angle*(math.pi/180))*axis_offset
 
 	x = -math.sin(crrnt_angle*(math.pi/180))*distance
-	print "x is ", x	
 	y = math.cos(crrnt_angle*(math.pi/180))*distance
+
+	x += offset_x
+	y += offset_y
+	print "x is ", x	
 	print "y is ", y	
-	x += x_transformation
 	return (x,y)
 
 def main(argv):
