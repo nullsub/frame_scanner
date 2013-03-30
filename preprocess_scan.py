@@ -5,8 +5,7 @@ import getopt
 import os
 import subprocess
 
-#nr_of_steps = (48*3*3)
-nr_of_steps = (71)
+nr_of_steps = (48*3*3)/8
 
 def main(argv):
 	global nr_of_steps
@@ -15,11 +14,12 @@ def main(argv):
 	out = []
 
 	for i in range(0, nr_of_steps):
-		distance = None
+		print "pic nr", i
+ 		subprocess.call(["jpegtran -rotate 90 " + os.getcwd() + "/scans/" + str(i) + ".jpg > " + os.getcwd() + "/scans/" + str(i) + "_r.jpg"], shell=True)
 		try:
-			distance = subprocess.check_output(["ocr/ssocr/ssocr -o debug.jpg crop 240 1440 1000 445 remove_isolated -D -i5 -d-1 -n4 -r6   -t61 " + os.getcwd() + "/scans/" + str(i) + ".jpg"], shell=True)
+			distance = subprocess.check_output(["ocr/ssocr/ssocr -o debug.jpg crop 240 1465 1000 445 remove_isolated -D -i5 -d-1 -n4 -r4 -t61.9 " + os.getcwd() + "/scans/" + str(i) + "_r.jpg"], shell=True)
 		except:
-			subprocess.call(["shotwell " + os.getcwd() + "/scans/" + str(i) + ".jpg"], shell=True)
+			subprocess.call(["shotwell " + os.getcwd() + "/scans/" + str(i) + "_r.jpg"], shell=True)
 			while True:
 				distance = raw_input("enter distance: ")
 				try:
@@ -32,7 +32,7 @@ def main(argv):
 		print "distance is ", distance
 
 		distance *= 1000
-		distance -= 0
+		distance -= 45
 
 		out.append(str(int(distance)) + "\n")
 

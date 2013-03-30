@@ -6,7 +6,7 @@ import serial
 import subprocess
 import time
 
-nr_of_steps = (48*3*3)
+nr_of_steps = (48*3*3)/8
 
 def main(argv):
 	global nr_of_steps
@@ -42,16 +42,12 @@ def main(argv):
 		subprocess.call(["sleep", "1s"])
 
 		#get distance from camera
-		if subprocess.call(["wget", ip_addr + ":8080/photo.jpg", "-O scans/"  + os.getcwd() +  + str(i) + ".jpg"]) != 0: 
+		if subprocess.call(["wget " + ip_addr + ":8080/photo.jpg -O scans/" + str(i) + ".jpg"], shell=True) != 0: 
 			print 'can not connect to ip ', ip_addr
 			sys.exit(2)
 
-		subprocess.call(["jpegtran -rotate 90 scans/" + str(i) + ".jpg > scans/ " + str(i) + ".jpg"], shell=True)
-
 		#step the motor
-		ser_dev.write("step_motor 1\n")
-	
-	output.close()
+		ser_dev.write("step_motor 8\n")
 	
 if __name__ == "__main__":
 	main(sys.argv[1:])
