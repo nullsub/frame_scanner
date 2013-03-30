@@ -4,6 +4,7 @@ import sys
 import os
 import serial
 import subprocess
+import time
 
 nr_of_steps = (48*3*3)
 
@@ -20,11 +21,21 @@ def main(argv):
 		sys.exit(2)
 	try:
 		ser_dev = serial.Serial(port, 9600, timeout=1)
+		print "start"
 	except:
 		print "can not open serial port", port
 		sys.exit(2)
 
+	start_time = time.time()
+
 	for i in range(0, nr_of_steps):
+
+		crrnt_time = time.time()
+		
+		if crrnt_time - start_time > 60*14:
+			raw_input("Reenable device and press enter")
+			start_time = time.time()
+			
 		distance = "0.00"
 
 		#wait until distance is updated
