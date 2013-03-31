@@ -6,7 +6,8 @@ import serial
 import subprocess
 import time
 
-nr_of_steps = (48*3*3)/8
+scale_step = 4
+nr_of_steps = (48*3*3)/scale_step
 
 def main(argv):
 	global nr_of_steps
@@ -47,7 +48,9 @@ def main(argv):
 			sys.exit(2)
 
 		#step the motor
-		ser_dev.write("step_motor 8\n")
+		for x in range(0, scale_step):
+			ser_dev.write("step_motor 1\n")
+			subprocess.call(["sleep", "0.2s"])
 	
 if __name__ == "__main__":
 	main(sys.argv[1:])
