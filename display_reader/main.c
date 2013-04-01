@@ -204,19 +204,28 @@ int segment_exists(int x, int y)
 	return 0;
 }
 
-int find_x_offset()
+int x_offset = 0;
+int y_offset = 0;
+
+void find_offset()
 {
-	for(int x = 0; x< 250; x++) {
+	for(int x = 0; x< 450; x++) {
 		if(get_brightness(x, 100, 5) <= 10) {
-			return x;
+			x_offset = x;
+			for(int y = 100; y > 0; y--) {
+				if(get_brightness(x_offset+20, y, 5) > 10) {
+					y_offset = y;
+					return;
+				}
+				return;
+			}
 		}
 	}
-	return 0;
 }
 
 int main(int argc, char **argv) {
-	Imlib_Image image=NULL; /* an image handle */
-	char *imgfile=NULL; /* filename of image file */
+	Imlib_Image image = NULL; /* an image handle */
+	char *imgfile = NULL; /* filename of image file */
 	imgfile = argv[argc-1];
 	image = imlib_load_image(imgfile);
 	int target_val[4] = {0,0,0,0};
@@ -228,19 +237,21 @@ int main(int argc, char **argv) {
 	/* set the image we loaded as the current context image to work on */
 	imlib_context_set_image(image);
 	/* get image parameters */
-	//int w = imlib_image_get_width();
-	image = keep_pixels_filter(&image,  52.0, 7); //(image, threshold, mask)
+	image = keep_pixels_filter(&image,  51.2, 7); //(image, threshold, mask)
 	imlib_context_set_image(image);
 
 	imlib_image_set_format("jpeg");
 	imlib_save_image("debug.jpg");
 
-	int x_offset = find_x_offset();
+	find_offset();
 	if(x_offset > 160)
 		x_offset -= 120;
 	x_offset += 20;
+	y_offset += 20;
+
 	#ifdef DEBUG
 	printf("x_offset is %i\n", x_offset);
+	printf("y_offset is %i\n", y_offset);
 	#endif
 
 	int point = 99;
@@ -248,28 +259,28 @@ int main(int argc, char **argv) {
 	#ifdef DEBUG
 		printf("\n");
 	#endif
-		if(segment_exists(x_offset + 62 + i*219, 26)) {
+		if(segment_exists(x_offset + 62 + i*219, y_offset)) {
 			target_val[i] |= HORIZ_UP;
 		}
-		if(segment_exists(x_offset + i*210, 100)) {
+		if(segment_exists(x_offset + i*210, 80 + y_offset)) {
 			target_val[i] |= VERT_LEFT_UP;
 		}
-		if(segment_exists(x_offset + 120 + i*210, 100)) {
+		if(segment_exists(x_offset + 120 + i*210, 80 + y_offset)) {
 			target_val[i] |= VERT_RIGHT_UP;
 		}
-		if(segment_exists(x_offset + 62 + i*219, 188)) {
+		if(segment_exists(x_offset + 62 + i*219, 168 + y_offset)) {
 			target_val[i] |= HORIZ_MID;
 		}
-		if(segment_exists(x_offset + i*210, 265)) {
+		if(segment_exists(x_offset + i*210, 245 + y_offset)) {
 			target_val[i] |= VERT_LEFT_DOWN;
 		}
-		if(segment_exists(x_offset + 120 + i*210, 265)) {
+		if(segment_exists(x_offset + 120 + i*210, 245 + y_offset)) {
 			target_val[i] |= VERT_RIGHT_DOWN;
 		}
-		if(segment_exists(x_offset + 62 + i*210, 347)) {
+		if(segment_exists(x_offset + 62 + i*210, 327 + y_offset)) {
 			target_val[i] |= HORIZ_DOWN;
 		}
-		if(segment_exists(x_offset + 162 + i*210, 347) && point == 99)
+		if(segment_exists(x_offset + 162 + i*210, 327 + y_offset) && point == 99)
 			point = i;
 		switch(target_val[i]) {
 			case D_ZERO:

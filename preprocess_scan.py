@@ -5,8 +5,7 @@ import getopt
 import os
 import subprocess
 
-nr_of_steps = (43*3*3)
-#nr_of_steps = 100
+nr_of_steps = ((48*3*3)/2)+20
 path = os.getcwd() + "/scans/" 
 
 def main(argv):
@@ -20,7 +19,7 @@ def main(argv):
 	for i in range(0, nr_of_steps):
 	
 		print "pic nr", i
- 		subprocess.call(["jpegtran -crop 940x410+290+1480 -rotate 90 -grayscale " + path + str(i) + ".jpg > " + path + str(i) + "_r.jpg"], shell=True)
+ 		subprocess.call(["jpegtran -crop 940x410+290+1520 -rotate 90 -grayscale " + path + str(i) + ".jpg > " + path + str(i) + "_r.jpg"], shell=True)
 		try:
 			#distance = subprocess.check_output(["ocr/ssocr/ssocr -o debug.jpg -D -i5 -d-1 -n4 -r4 -t41.3  remove_isolated " + path + str(i) + "_r.jpg"], shell=True)
 			distance = subprocess.check_output(["display_reader/display_reader " + path + str(i) + "_r.jpg"], shell=True)

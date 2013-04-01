@@ -1,17 +1,16 @@
 #!/usr/bin/python
-from dxfwrite import DXFEngine as dxf
 
+from dxfwrite import DXFEngine as dxf
 import sys
 import getopt
 import os
 import math
 
 crrnt_angle = -90
-axis_offset = 25
-step_angle = 0.8333333333333333333333333333333333333333333333
+axis_offset = 23.7
+step_angle = 0.83333333333333333333333333333333333333333333333333333333333333333333333333333333333333
 
 def convert_to_coords(distance):
-	
 	offset_x = -math.sin((crrnt_angle-90)*(math.pi/180))*axis_offset
 	offset_y = math.cos((crrnt_angle-90)*(math.pi/180))*axis_offset
 
@@ -51,7 +50,6 @@ def main(argv):
 		print 'can not open input file', inputfile
 		sys.exit(2)
 
-	 #read all the lines into a list.
 	lines = f.readlines()	
 
 	if len(lines) <= 3:
@@ -82,12 +80,12 @@ def main(argv):
 			start_x = x
 			start_y = y
 		else:
-			drawing.add(dxf.line((x, y), (prev_x, prev_y), color=7))
+			drawing.add(dxf.line((x, y), (prev_x, prev_y), color = 7))
 		prev_x = x
 		prev_y = y
 		start = 0
 
-	drawing.add(dxf.line((prev_x, prev_y), (start_x, start_y), color=7))
+	drawing.add(dxf.line((prev_x, prev_y), (start_x, start_y), color = 7))
 	drawing.save()
 	
 if __name__ == "__main__":

@@ -7,8 +7,7 @@ import serial
 import subprocess
 import time
 
-scale_step = 4
-nr_of_steps = (48*3*3)/scale_step
+nr_of_steps = ((48*3*3)/2)+20
 
 def main(argv):
 	global nr_of_steps
@@ -52,9 +51,7 @@ def main(argv):
 			sys.exit(2)
 
 		#step the motor
-		for x in range(0, scale_step):
-			ser_dev.write("step_motor 1\n")
-			subprocess.call(["sleep", "0.2s"])
+		ser_dev.write("step_motor 1\n")
 
 	subprocess.call(["zip -9 -r -T "+ outfile+".zip scans"], shell=True)
 	
