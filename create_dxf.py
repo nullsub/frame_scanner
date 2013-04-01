@@ -88,9 +88,6 @@ def main(argv):
 		start = 0
 
 	drawing.add(dxf.line((prev_x, prev_y), (start_x, start_y), color=7))
-
-	#drawing.add_layer('TEXTLAYER', color=2)
-	#drawing.add(dxf.text('Test', insert=(0, 0.2), layer='TEXTLAYER'))
 	drawing.save()
 	
 if __name__ == "__main__":
