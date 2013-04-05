@@ -1,4 +1,4 @@
-/* ImLib2 Header */
+	/* ImLib2 Header */
 #include <X11/Xlib.h>       /* needed by Imlib2.h */
 #include <Imlib2.h>
 
@@ -192,10 +192,11 @@ float get_brightness(int x, int y, int size)
 	}
 	return ((crrnt_lum*100/(size*size))/255);
 }
+
 //#define DEBUG 1
 int segment_exists(int x, int y)
 {
-	float brt = get_brightness(x, y, 32);
+	float brt = get_brightness(x, y, 20);
 	#ifdef DEBUG
 	printf("brt is %f\n", brt);
 	#endif
@@ -210,15 +211,15 @@ int y_offset = 0;
 void find_offset()
 {
 	for(int x = 0; x< 450; x++) {
-		if(get_brightness(x, 100, 5) <= 10) {
+		if(get_brightness(x, 135, 5) <= 10) {
 			x_offset = x;
-			for(int y = 100; y > 0; y--) {
-				if(get_brightness(x_offset+20, y, 5) > 10) {
+			for(int y = 135; y > 0; y--) {
+				if(get_brightness(x_offset+20, y, 10) > 10) {
 					y_offset = y;
 					return;
 				}
-				return;
 			}
+			return;
 		}
 	}
 }
@@ -237,21 +238,39 @@ int main(int argc, char **argv) {
 	/* set the image we loaded as the current context image to work on */
 	imlib_context_set_image(image);
 	/* get image parameters */
-	image = keep_pixels_filter(&image,  51.2, 7); //(image, threshold, mask)
+	image = keep_pixels_filter(&image,  50.0, 7); //(image, threshold, mask)
 	imlib_context_set_image(image);
 
 	imlib_image_set_format("jpeg");
 	imlib_save_image("debug.jpg");
 
 	find_offset();
-	if(x_offset > 160)
-		x_offset -= 120;
+	if(x_offset > 135)
+		x_offset -= 125;
 	x_offset += 20;
-	y_offset += 20;
+	y_offset += 5;
 
 	#ifdef DEBUG
 	printf("x_offset is %i\n", x_offset);
 	printf("y_offset is %i\n", y_offset);
+
+	Imlib_Image new_image; /* construct filtered image here */
+
+	new_image = imlib_clone_image();
+
+	imlib_context_set_image(new_image);
+
+	int x_pos = x_offset + 208 + 72;
+	int y_pos = y_offset ;
+	
+	for(int x = 0; x < 30; x++) {
+		draw_pixel(new_image, x_pos-15+x, y_pos, 0x80);
+	}
+	for(int y = 0; y < 30; y++) {
+		draw_pixel(new_image, x_pos, y_pos-15+y, 0x80);
+	}
+	imlib_save_image("debug.jpg");
+
 	#endif
 
 	int point = 99;
@@ -259,28 +278,28 @@ int main(int argc, char **argv) {
 	#ifdef DEBUG
 		printf("\n");
 	#endif
-		if(segment_exists(x_offset + 62 + i*219, y_offset)) {
+		if(segment_exists(x_offset + 72 + i*208, y_offset)) {
 			target_val[i] |= HORIZ_UP;
 		}
-		if(segment_exists(x_offset + i*210, 80 + y_offset)) {
+		if(segment_exists(x_offset + i*208, 80 + y_offset)) {
 			target_val[i] |= VERT_LEFT_UP;
 		}
-		if(segment_exists(x_offset + 120 + i*210, 80 + y_offset)) {
+		if(segment_exists(x_offset + 117 + i*208, 80 + y_offset)) {
 			target_val[i] |= VERT_RIGHT_UP;
 		}
-		if(segment_exists(x_offset + 62 + i*219, 168 + y_offset)) {
+		if(segment_exists(x_offset + 72 + i*208, 150 + y_offset)) {
 			target_val[i] |= HORIZ_MID;
 		}
-		if(segment_exists(x_offset + i*210, 245 + y_offset)) {
+		if(segment_exists(x_offset + i*208, 229 + y_offset)) {
 			target_val[i] |= VERT_LEFT_DOWN;
 		}
-		if(segment_exists(x_offset + 120 + i*210, 245 + y_offset)) {
+		if(segment_exists(x_offset + 117 + i*208, 229 + y_offset)) {
 			target_val[i] |= VERT_RIGHT_DOWN;
 		}
-		if(segment_exists(x_offset + 62 + i*210, 327 + y_offset)) {
+		if(segment_exists(x_offset + 72 + i*208, 306 + y_offset)) {
 			target_val[i] |= HORIZ_DOWN;
 		}
-		if(segment_exists(x_offset + 162 + i*210, 327 + y_offset) && point == 99)
+		if(segment_exists(x_offset + 172 + i*208, 306 + y_offset) && point == 99)
 			point = i;
 		switch(target_val[i]) {
 			case D_ZERO:
